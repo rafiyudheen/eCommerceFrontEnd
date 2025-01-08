@@ -1,0 +1,11 @@
+.navBar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.active {
+  background-color: rgb(99, 99, 221);
+  font-style: italic;
+}
