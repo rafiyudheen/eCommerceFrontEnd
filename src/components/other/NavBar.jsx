@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "../../styles/navbar.css";
-
+import logo from "../../ICO/logo.svg";
+import { navbarItems } from "../../assets/NavbarItems";
+import NavBarUserTile from "./NavBarUserTile";
+import LoginButton from "./LoginButton";
+import { useState } from "react";
+import ThemeController from "./ThemeController";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, removeUser } from "../../redux/slice/UserSlice";
+import Banner from "./Banner";
 const NavBar = () => {
+  const user = useSelector((state) => state.user.value);
+
+  useEffect(() => {
+    console.log("test", user);
+  }, []);
+
   return (
     <>
       <div className="drawer">
@@ -30,21 +44,27 @@ const NavBar = () => {
                 </svg>
               </label>
             </div>
-            <div className="mx-2 flex-1 px-2">Navbar Title</div>
+            <div className="mx-2 flex-1 px-2">
+              <img src={logo} alt="" className="logo" />
+            </div>
             <div className="hidden flex-none lg:block">
               <ul className="menu menu-horizontal">
                 {/* Navbar menu content here */}
-                <li>
-                  <a>Navbar Item 1</a>
-                </li>
-                <li>
-                  <a>Navbar Item 2</a>
-                </li>
+
+                {navbarItems.map((navBarItem, index) => {
+                  // console.log(navBarItem.title);
+                  return (
+                    <li key={index}>
+                      <a>{navBarItem.title}</a>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
+            <ThemeController />
+            {user._id ? <NavBarUserTile /> : <LoginButton />}
           </div>
-          {/* Page content here */}
-          Content
+          <Banner />
         </div>
         <div className="drawer-side">
           <label
@@ -54,13 +74,14 @@ const NavBar = () => {
           ></label>
           <ul className="menu bg-base-200 min-h-full w-80 p-4">
             {/* Sidebar content here */}
-            <li>
-              
-              <a>Sidebar Item 1</a>
-            </li>
-            <li>
-              <a>Sidebar Item 2</a>
-            </li>
+            {navbarItems.map((navBarItem, index) => {
+              // console.log(navBarItem.title);
+              return (
+                <li key={index}>
+                  <a>{navBarItem.title}</a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>

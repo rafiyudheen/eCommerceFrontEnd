@@ -1,40 +1,37 @@
 import React, { useEffect, useState } from "react";
-import Card from "../components/product/Card";
 import NavBar from "../components/other/NavBar";
+import axiosInstance from "../config/AuxiosInstance";
+import { useSelector, useDispatch } from "react-redux";
+import { setUser, removeUser } from "../redux/slice/UserSlice";
+import Banner from "../components/other/Banner";
 
 const HomePage = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const user = useSelector((state) => state.user.value);
+  const dispatch = useDispatch();
+
+  const checkUserLogged = async () => {
+    try {
+      const responce = await axiosInstance({
+        method: "GET",
+        url: "/user/userProfile",
+      });
+      console.log("responce===>", responce.data.data);
+      dispatch(setUser(responce.data.data));
+
+      // console.log(responce.data.data);
+      // console.log(responce);
+    } catch (err) {}
+  };
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme) {
-      setIsDarkMode(savedTheme === "dark");
-      document.documentElement.classList.toggle("dark", savedTheme === "dark");
-    } else {
-      // Default to OS preference
-      setIsDarkMode(window.matchMedia("(prefers-color-scheme: dark)").matches);
-    }
+    checkUserLogged();
+    console.log("Redux_user", user);
   }, []);
-
-  const toggleTheme = () => {
-    setIsDarkMode((prevMode) => {
-      console.log("isDarkMode===>", prevMode);
-      const newMode = !prevMode;
-      localStorage.setItem("theme", newMode ? "dark" : "light");
-      document.documentElement.classList.toggle("dark", newMode);
-      return newMode;
-    });
-  };
 
   return (
     <>
       <NavBar></NavBar>
-      <input
-        type="checkbox"
-        value="synthwave"
-        className="toggle theme-controller"
-        onClick={toggleTheme}
-      />
+    
     </>
   );
 };
